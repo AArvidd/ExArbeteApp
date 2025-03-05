@@ -35,16 +35,6 @@
 			path = ExArbeteApp;
 			sourceTree = "<group>";
 		};
-		5E25E7702D76E6CA00EB59C7 /* ExArbeteAppTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ExArbeteAppTests;
-			sourceTree = "<group>";
-		};
-		5E25E77A2D76E6CA00EB59C7 /* ExArbeteAppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ExArbeteAppUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				5E25E75E2D76E6C700EB59C7 /* ExArbeteApp */,
-				5E25E7702D76E6CA00EB59C7 /* ExArbeteAppTests */,
-				5E25E77A2D76E6CA00EB59C7 /* ExArbeteAppUITests */,
 				5E25E75D2D76E6C700EB59C7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +118,6 @@
 			dependencies = (
 				5E25E76F2D76E6CA00EB59C7 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				5E25E7702D76E6CA00EB59C7 /* ExArbeteAppTests */,
-			);
 			name = ExArbeteAppTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +137,6 @@
 			);
 			dependencies = (
 				5E25E7792D76E6CA00EB59C7 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				5E25E77A2D76E6CA00EB59C7 /* ExArbeteAppUITests */,
 			);
 			name = ExArbeteAppUITests;
 			packageProductDependencies = (
