@@ -20,10 +20,7 @@ kernel void calculate_madelbrot(
     // fConst[0] == x position of the upper left pixle;
     // fConst[1] == y position of the upper left pixle;
     // fConst[2] == distens between two pixles in x and y direction
-    
-    
      
-    
     uint px = index % iConst[0]; // x position of the pixle in image
     uint py = index / iConst[0]; // y position of the pixle in image
     
@@ -34,10 +31,8 @@ kernel void calculate_madelbrot(
     
     int maxItiration = 4000;
     
-    
     out[index] = 0xff000000;
 
-    
     for(int i = 0; i < maxItiration; i++){
         float xtemp = (x * x) - (y * y) + Cx;
         float ytemp = 2 * x * y + Cy;

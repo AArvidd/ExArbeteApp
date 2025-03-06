@@ -16,7 +16,7 @@
 @implementation MetalSetupp{
     id<MTLDevice> _mDevice;
     
-    id<MTLComputePipelineState> _mAddFunctionPSO;
+    id<MTLComputePipelineState> _mComputeFunctionPSO;
     
     id<MTLCommandQueue> _mCommandQueue;
     
@@ -41,11 +41,11 @@
         
         arrayLength = _pWidth * _pHeight;
         bufferSize = arrayLength * sizeof(int);
-        
+        	
         _X = 0;
         _Y = 0;
         _width = 2;
-        
+        	
         _mDevice = device;
         
         NSError* error = nil;
@@ -56,14 +56,14 @@
             return nil;
         }
         
-        id<MTLFunction> addFunction = [deafultLibrary newFunctionWithName:@"calculate_madelbrot"];
-        if(addFunction == nil){
+        id<MTLFunction> computFunction = [deafultLibrary newFunctionWithName:@"calculate_madelbrot"];
+        if(computFunction == nil){
             NSLog(@"Faild to find the adder function");
             return nil;
         }
         
-        _mAddFunctionPSO = [_mDevice newComputePipelineStateWithFunction:addFunction error:&error];
-        if(_mAddFunctionPSO == nil){
+        _mComputeFunctionPSO = [_mDevice newComputePipelineStateWithFunction:computFunction error:&error];
+        if(_mComputeFunctionPSO == nil){
             NSLog(@"Faild to create pipeline state object, error %@", error);
             return nil;
         }
@@ -120,14 +120,14 @@
 }
 
 - (void)encodeAddCommand:(id<MTLComputeCommandEncoder>_Nonnull)computeEncoder {
-    [computeEncoder setComputePipelineState:_mAddFunctionPSO];
+    [computeEncoder setComputePipelineState:_mComputeFunctionPSO];
     [computeEncoder setBuffer:_mBufferConstI offset:0 atIndex:0];
     [computeEncoder setBuffer:_mBufferConstF offset:0 atIndex:1];
     [computeEncoder setBuffer:_mBufferOut offset:0 atIndex:2];
     
     MTLSize gridSize = MTLSizeMake(arrayLength, 1, 1);
     
-    NSUInteger thredGroupSize = _mAddFunctionPSO.maxTotalThreadsPerThreadgroup;
+    NSUInteger thredGroupSize = _mComputeFunctionPSO.maxTotalThreadsPerThreadgroup;
     if(thredGroupSize > arrayLength){
         thredGroupSize = arrayLength;
     }

@@ -92,8 +92,12 @@
     int width = (int)[widthFeld.stringValue integerValue];
     int height = (int)[heightFeld.stringValue integerValue];
     
-    if(width == 0 || height == 0){
+    if(width <= 0 || height <= 0){
         // write allert
+        NSAlert* alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Not valid input"];
+        [alert setInformativeText:@"One of the inputs is invalid"];
+        [alert runModal];
         return;
     }
     
