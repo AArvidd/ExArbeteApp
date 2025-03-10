@@ -12,12 +12,6 @@
 #import "ImageIO/ImageIO.h"
 #import "Cocoa/Cocoa.h"
 
-//extern unsigned int gWidth;
-//extern unsigned int gHeight;
-
-extern unsigned int gPWidth;
-extern unsigned int gPHeight;
-
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -37,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readwrite) unsigned int pWidth;
 @property (readwrite) unsigned int pHeight;
+@property (readwrite) unsigned int colorMode;
 
 @end
 

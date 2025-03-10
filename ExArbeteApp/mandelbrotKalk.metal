@@ -17,6 +17,7 @@ kernel void calculate_madelbrot(
     
     // iConst[0] == image width
     // iConst[1] == image height
+    // iConst[2] == color mode
     // fConst[0] == x position of the upper left pixle;
     // fConst[1] == y position of the upper left pixle;
     // fConst[2] == distens between two pixles in x and y direction
@@ -30,8 +31,6 @@ kernel void calculate_madelbrot(
     float Cy = fConst[1] - (py * fConst[2]); // y position of the pixle in mandelbrot set
     
     int maxItiration = 4000;
-    
-    out[index] = 0xff000000;
 
     for(int i = 0; i < maxItiration; i++){
         float xtemp = (x * x) - (y * y) + Cx;
@@ -40,14 +39,24 @@ kernel void calculate_madelbrot(
         y = ytemp;
         if((x * x) + (y * y) > 4){
             float pros = (float)i / maxItiration;
-            int red = pros * 255;
-            int green = (red * 10) % 255;
-            int blue = (green * 10) % 255;
-            green <<= 8;
-            blue <<= 16;
-            out[index] = 0xff000000 | blue | green | red;
-            return;
+            switch(iConst[2]){
+                case 0:{
+                    int red = pros * 255;
+                    int green = (red * 10) % 255;
+                    int blue = (green * 10) % 255;
+                    green <<= 8;
+                    blue <<= 16;
+                    out[index] = 0xff000000 | blue | green | red;
+                    return;
+                }
+                case 1:{
+                    out[index] = 0xffffffff;
+                    return;
+                }
+                
+            }
         }
     }
+    out[index] = 0xff000000;
     
 }

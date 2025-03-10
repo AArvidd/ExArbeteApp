@@ -12,6 +12,10 @@
 @property (readwrite) MetalSetupp* metal;
 @property (readwrite) NSImageView* imageView;
 
+@property (readwrite) NSTextField* XField;
+@property (readwrite) NSTextField* YField;
+@property (readwrite) NSTextField* WField;
+
 - (void)rightPress;
 - (void)leftPress;
 - (void)uppPress;
@@ -19,6 +23,7 @@
 - (void)inPress;
 - (void)outPress;
 - (void)resetPress;
+- (void)colorModePress;
 - (void)saveImagePress;
 
 @end
@@ -46,10 +51,9 @@
     NSWindow* window;
     mainView* view;
     
-//    NSRect rect = NSMakeRect(100, 100, gPWidth, gPHeight);
     NSRect rect = NSMakeRect(100, 100, windowWidth, windowHeight);
     
-    view = [[mainView alloc] initWithFrame:rect];
+    view = [[mainView alloc] initWithFrame:NSMakeRect(0, 0, windowWidth, windowHeight)];
     
     view.metal = _metal;
     
@@ -84,10 +88,30 @@
     [resetButton setTitle:@"reset"];
     [resetButton setAction:@selector(resetPress)];
     
+    NSButton* colorButton  = [[NSButton alloc] initWithFrame:NSMakeRect(buttonWidth * 3.5,  windowHeight - 40, buttonWidth * 2, buttonHeight)];
+    [colorButton setTitle:@"Switch color mode"];
+    [colorButton setAction:@selector(colorModePress)];
+    
     NSButton* saveButton   = [[NSButton alloc] initWithFrame:NSMakeRect(windowWidth - buttonWidth - 10, windowHeight - 40, buttonWidth, buttonHeight)];
     [saveButton setTitle:@"save image"];
     [saveButton setAction:@selector(saveImagePress)];
     
+    
+    NSTextField* XField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 40, 200, 22)];
+    NSTextField* YField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 200, 22)];
+    NSTextField* WField = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 70, 200, 22)];
+    [XField setEditable:NO];
+    [YField setEditable:NO];
+    [WField setEditable:NO];
+    [XField setSelectable:YES];
+    
+    [XField setStringValue:[NSString stringWithFormat:@"X: %.15f", _metal.X]];
+    [YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", _metal.Y]];
+    [WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", _metal.width]];
+    
+    view.XField = XField;
+    view.YField = YField;
+    view.WField = WField;
     
     
     NSImageView* imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, windowWidth, windowHeight)];
@@ -116,7 +140,12 @@
     [view addSubview:inButton];
     [view addSubview:outButton];
     [view addSubview:resetButton];
+    [view addSubview:colorButton];
     [view addSubview:saveButton];
+    
+    [view addSubview:XField];
+    [view addSubview:YField];
+    [view addSubview:WField];
     
     [window setDelegate:view];
     [window makeKeyAndOrderFront:nil];
@@ -168,11 +197,22 @@
     [self uppdateImage];
 }
 
+- (void) colorModePress{
+    _metal.colorMode++;
+    if(_metal.colorMode == 2){
+        _metal.colorMode = 0;
+    }
+    [self uppdateImage];
+}
+
 
 - (void) uppdateImage{
     [_metal uppdateData];
     [_metal SendComputeCommand];
     [_imageView setImage:_metal.nsImage];
+    [_XField setStringValue:[NSString stringWithFormat:@"X: %.15f", _metal.X]];
+    [_YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", _metal.Y]];
+    [_WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", _metal.width]];
 }
 
 - (void) saveImagePress{

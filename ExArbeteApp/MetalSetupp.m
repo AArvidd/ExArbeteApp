@@ -38,6 +38,7 @@
         
         _pWidth = 1000;
         _pHeight = 1000;
+        _colorMode = 0;
         
         arrayLength = _pWidth * _pHeight;
         bufferSize = arrayLength * sizeof(int);
@@ -84,7 +85,7 @@
     float upperLeftX = _X - ((_pWidth * deltaPixle) / 2);
     float upperLeftY = _Y + ((_pHeight * deltaPixle) / 2);
     
-    _mBufferConstI = [_mDevice newBufferWithLength:2 * sizeof(int) options:MTLResourceStorageModeShared];
+    _mBufferConstI = [_mDevice newBufferWithLength:3 * sizeof(int) options:MTLResourceStorageModeShared];
     _mBufferConstF = [_mDevice newBufferWithLength:3 * sizeof(float) options:MTLResourceStorageModeShared];
     _mBufferOut = [_mDevice newBufferWithLength:bufferSize options:MTLResourceStorageModeShared];
     
@@ -93,6 +94,7 @@
     float* constFP = _mBufferConstF.contents;
     constIP[0] = _pWidth;
     constIP[1] = _pHeight;
+    constIP[2] = _colorMode;
     
     constFP[0] = upperLeftX;
     constFP[1] = upperLeftY;
@@ -208,6 +210,7 @@
     
     constIP[0] = _pWidth;
     constIP[1] = _pHeight;
+    constIP[2] = _colorMode;
     
     constFP[0] = upperLeftX;
     constFP[1] = upperLeftY;
