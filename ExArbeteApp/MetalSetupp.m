@@ -7,11 +7,6 @@
 
 #import "MetalSetupp.h"
 
-//float width = 3;
-
-//const unsigned int pWidth = 1000;
-//const unsigned int pHeight = 1000;
-
 
 @implementation MetalSetupp{
     id<MTLDevice> _mDevice;
@@ -43,10 +38,10 @@
         arrayLength = _pWidth * _pHeight;
         bufferSize = arrayLength * sizeof(int);
         	
-        _X = 0;
-        _Y = 0;
-        _width = 2;
-        	
+        _FPX = 0;
+        _FPY = 0;
+        _FPwidth = 2 << NUM_FRAC_BITS;
+        
         _mDevice = device;
         
         NSError* error = nil;
@@ -80,10 +75,10 @@
 
 - (void) prepareData{
     
-    float deltaPixle = _width / _pWidth;
+    int deltaPixle = (int)(_FPwidth / _pWidth);
     
-    float upperLeftX = _X - ((_pWidth * deltaPixle) / 2);
-    float upperLeftY = _Y + ((_pHeight * deltaPixle) / 2);
+    int upperLeftX = _FPX - ((_pWidth * deltaPixle) / 2);
+    int upperLeftY = _FPY + ((_pHeight * deltaPixle) / 2);
     
     _mBufferConstI = [_mDevice newBufferWithLength:3 * sizeof(int) options:MTLResourceStorageModeShared];
     _mBufferConstF = [_mDevice newBufferWithLength:3 * sizeof(float) options:MTLResourceStorageModeShared];
@@ -91,14 +86,14 @@
     
     
     int* constIP = _mBufferConstI.contents;
-    float* constFP = _mBufferConstF.contents;
+    int* constFPP = _mBufferConstF.contents;
     constIP[0] = _pWidth;
     constIP[1] = _pHeight;
     constIP[2] = _colorMode;
     
-    constFP[0] = upperLeftX;
-    constFP[1] = upperLeftY;
-    constFP[2] = deltaPixle;
+    constFPP[0] = upperLeftX;
+    constFPP[1] = upperLeftY;
+    constFPP[2] = deltaPixle;
     
 }
 
@@ -200,21 +195,21 @@
         _mBufferOut = [_mDevice newBufferWithLength:bufferSize options:MTLResourceStorageModeShared];
     }
     
-    float deltaPixle = _width / _pWidth;
+    int FPdeltaPixle = (int)(_FPwidth / _pWidth);
     
-    float upperLeftX = _X - ((_pWidth * deltaPixle) / 2);
-    float upperLeftY = _Y + ((_pHeight * deltaPixle) / 2);
+    int FPupperLeftX = _FPX - ((_pWidth * FPdeltaPixle) / 2);
+    int FPupperLeftY = _FPY + ((_pHeight * FPdeltaPixle) / 2);
     
     int* constIP = _mBufferConstI.contents;
-    float* constFP = _mBufferConstF.contents;
+    int* constFPP = _mBufferConstF.contents;
     
     constIP[0] = _pWidth;
     constIP[1] = _pHeight;
     constIP[2] = _colorMode;
     
-    constFP[0] = upperLeftX;
-    constFP[1] = upperLeftY;
-    constFP[2] = deltaPixle;
+    constFPP[0] = FPupperLeftX;
+    constFPP[1] = FPupperLeftY;
+    constFPP[2] = FPdeltaPixle;
     
 }
 

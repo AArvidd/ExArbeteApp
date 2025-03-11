@@ -105,9 +105,9 @@
     [WField setEditable:NO];
     [XField setSelectable:YES];
     
-    [XField setStringValue:[NSString stringWithFormat:@"X: %.15f", _metal.X]];
-    [YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", _metal.Y]];
-    [WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", _metal.width]];
+    [XField setStringValue:[NSString stringWithFormat:@"X: %.15f", (float)_metal.FPX / FIXED_POINT_BASE]];
+    [YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", (float)_metal.FPY / FIXED_POINT_BASE]];
+    [WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", (float)_metal.FPwidth / FIXED_POINT_BASE]];
     
     view.XField = XField;
     view.YField = YField;
@@ -161,39 +161,45 @@
 @implementation mainView
 
 - (void) rightPress{
-    _metal.X += _metal.width / 4;
+    _metal.FPX += _metal.FPwidth / 4;
     [self uppdateImage];
 }
 
 - (void) leftPress{
-    _metal.X -= _metal.width / 4;
+    _metal.FPX -= _metal.FPwidth / 4;
     [self uppdateImage];
 }
 
 - (void) uppPress{
-    _metal.Y += _metal.width / 4;
+    _metal.FPY += _metal.FPwidth / 4;
     [self uppdateImage];
 }
 
 - (void) downPress{
-    _metal.Y -= _metal.width / 4;
+    _metal.FPY -= _metal.FPwidth / 4;
     [self uppdateImage];
 }
 
 - (void) inPress{
-    _metal.width /= 2;
+    if(_metal.FPwidth == 0x400){
+        return;
+    }
+    _metal.FPwidth /= 2;
     [self uppdateImage];
 }
 
 - (void) outPress{
-    _metal.width *= 2;
+    if(_metal.FPwidth == 0x40000000){
+        return;
+    }
+    _metal.FPwidth *= 2;
     [self uppdateImage];
 }
 
 - (void) resetPress{
-    _metal.X = 0;
-    _metal.Y = 0;
-    _metal.width = 2;
+    _metal.FPX = 0;
+    _metal.FPY = 0;
+    _metal.FPwidth = 2 << NUM_FRAC_BITS;
     [self uppdateImage];
 }
 
@@ -210,16 +216,13 @@
     [_metal uppdateData];
     [_metal SendComputeCommand];
     [_imageView setImage:_metal.nsImage];
-    [_XField setStringValue:[NSString stringWithFormat:@"X: %.15f", _metal.X]];
-    [_YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", _metal.Y]];
-    [_WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", _metal.width]];
+    [_XField setStringValue:[NSString stringWithFormat:@"X: %.15f", (float)_metal.FPX / FIXED_POINT_BASE]];
+    [_YField setStringValue:[NSString stringWithFormat:@"Y: %.15f", (float)_metal.FPY / FIXED_POINT_BASE]];
+    [_WField setStringValue:[NSString stringWithFormat:@"Width: %.15f", (float)_metal.FPwidth / FIXED_POINT_BASE]];
 }
 
 - (void) saveImagePress{
-    
     [[SaveWindow alloc] init:_metal];
-    
-//    [_metal saveImage];
 }
 
 - (void)windowWillClose:(NSNotification *)notification{

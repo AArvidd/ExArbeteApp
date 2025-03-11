@@ -12,6 +12,9 @@
 #import "ImageIO/ImageIO.h"
 #import "Cocoa/Cocoa.h"
 
+#define FIXED_POINT_BASE 0x10000000
+#define NUM_FRAC_BITS 28
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSImage* nsImage;
 
-@property (readwrite) float X;
-@property (readwrite) float Y;
-@property (readwrite) float width;
+@property (readwrite) int FPX;
+@property (readwrite) int FPY;
+@property (readwrite) int FPwidth;
 
 @property (readwrite) unsigned int pWidth;
 @property (readwrite) unsigned int pHeight;
